@@ -27,30 +27,37 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center p-4" style={{ background: '#0a0a0f' }}>
-      <div className="glow-blob w-96 h-96 top-0 left-1/4" style={{ background: '#6366f1' }} />
-      <div className="glow-blob w-64 h-64 bottom-0 right-1/4" style={{ background: '#8b5cf6' }} />
+    <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 16px', background: '#f8fafc' }}>
+      {/* Logo */}
+      <Link href="/" style={{ marginBottom: 32, fontWeight: 900, fontSize: 20, letterSpacing: '-0.03em', color: '#0f172a', textDecoration: 'none' }}>
+        Task<span style={{ color: '#0ea5e9' }}>Flow</span>
+      </Link>
 
-      <div className="relative z-10 w-full max-w-sm fade-up">
-        <div className="rounded-2xl p-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-white mb-1">Welcome back</h1>
-            <p className="text-sm" style={{ color: '#64748b' }}>Sign in with a magic link — no password needed</p>
+      <div style={{ width: '100%', maxWidth: 380, background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', boxShadow: '0 4px 24px rgba(0,0,0,.06)', padding: '36px 32px' }}>
+        {sent ? (
+          <div style={{ textAlign: 'center', padding: '8px 0' }}>
+            <div style={{ fontSize: 40, marginBottom: 16 }}>✉️</div>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Check your email</h2>
+            <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6 }}>
+              Magic link sent to <strong style={{ color: '#0f172a' }}>{email}</strong>.<br />Click it to sign in.
+            </p>
+            <button
+              onClick={() => setSent(false)}
+              style={{ marginTop: 20, fontSize: 13, color: '#0ea5e9', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              Use a different email
+            </button>
           </div>
-
-          {sent ? (
-            <div className="text-center py-4">
-              <div className="text-4xl mb-4">✉️</div>
-              <p className="text-white font-medium mb-2">Check your email</p>
-              <p className="text-sm" style={{ color: '#64748b' }}>Magic link sent to <strong className="text-white">{email}</strong></p>
-              <Button variant="ghost" className="mt-4 text-sm" onClick={() => setSent(false)}>
-                Use different email
-              </Button>
+        ) : (
+          <>
+            <div style={{ marginBottom: 28, textAlign: 'center' }}>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: 6 }}>Welcome back</h1>
+              <p style={{ fontSize: 13, color: '#64748b' }}>No password — we'll email you a magic link</p>
             </div>
-          ) : (
-            <form onSubmit={handleMagicLink} className="space-y-4">
+
+            <form onSubmit={handleMagicLink} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <Label htmlFor="email" className="text-white/80 text-sm mb-1.5 block">Email</Label>
+                <Label htmlFor="email" style={{ fontSize: 13, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -58,27 +65,26 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  className="bg-white/5 border-white/10 text-white placeholder:text-white/30"
+                  style={{ fontSize: 14, borderColor: '#e2e8f0', borderRadius: 8 }}
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full font-semibold"
-                style={{ background: '#6366f1', color: 'white' }}
                 disabled={loading}
+                style={{ background: '#0ea5e9', color: '#fff', fontWeight: 700, fontSize: 14, padding: '10px 0', borderRadius: 8, border: 'none', cursor: loading ? 'not-allowed' : 'pointer', transition: 'background 150ms ease, transform 100ms ease', width: '100%' }}
+                onMouseDown={e => (e.currentTarget.style.transform = 'scale(0.97)')}
+                onMouseUp={e => (e.currentTarget.style.transform = 'scale(1)')}
               >
                 {loading ? 'Sending…' : 'Send magic link'}
               </Button>
             </form>
-          )}
+          </>
+        )}
 
-          <p className="mt-6 text-center text-sm" style={{ color: '#64748b' }}>
-            No account?{' '}
-            <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">
-              Sign up free
-            </Link>
-          </p>
-        </div>
+        <p style={{ marginTop: 24, textAlign: 'center', fontSize: 13, color: '#64748b' }}>
+          No account?{' '}
+          <Link href="/signup" style={{ color: '#0ea5e9', fontWeight: 600, textDecoration: 'none' }}>Sign up free</Link>
+        </p>
       </div>
     </div>
   )
