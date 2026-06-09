@@ -147,28 +147,40 @@ export default function LandingPage() {
         @keyframes tf-blink{0%,100%{opacity:1}50%{opacity:0}}
         @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
         @media(max-width:960px){.tf-grid{grid-template-columns:1fr!important}.tf-demo-panel{display:none!important}.tf-mobile-strip{display:flex!important}}
+        @media(max-width:640px){
+          .tf-nav-links{display:none!important}
+          .tf-nav{padding:0 16px!important}
+          .tf-hero-section{padding:36px 20px 48px!important}
+          .tf-how-section{padding:0 20px 48px!important}
+          .tf-feat-section{padding:0 20px 56px!important}
+          .tf-bottom-cta{padding:48px 20px!important}
+          .tf-mobile-strip{padding:0 20px 32px!important}
+          .tf-nav-demo-btn{font-size:12px!important;padding:6px 10px!important}
+          .tf-nav-demo-btn .tf-btn-long{display:none!important}
+          .tf-nav-demo-btn .tf-btn-short{display:inline!important}
+        }
         @media(max-width:600px){.tf-hero-h1{font-size:34px!important}.tf-steps-row{flex-direction:column!important;gap:16px!important}}
       `}</style>
 
       {/* Nav */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(14px)', borderBottom: '1px solid #f1f5f9', padding: '0 32px', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: ready ? 'tf-fade 200ms ease-out both' : 'none' }}>
+      <nav className="tf-nav" style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255,255,255,.9)', backdropFilter: 'blur(14px)', borderBottom: '1px solid #f1f5f9', padding: '0 32px', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: ready ? 'tf-fade 200ms ease-out both' : 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
           <span style={{ fontWeight: 900, fontSize: 16, letterSpacing: '-0.03em' }}>Task<span style={{ color: '#0ea5e9' }}>Flow</span></span>
-          <div style={{ display: 'flex', gap: 24 }}>
+          <div className="tf-nav-links" style={{ display: 'flex', gap: 24 }}>
             {['Features', 'Pricing', 'Docs'].map(l => <a key={l} href="#" className="tf-nav-link">{l}</a>)}
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Link href="/login" className="tf-nav-link" style={{ padding: '7px 11px' }}>Sign in</Link>
-          <Link href="/demo" className="tf-cta-main" style={{ padding: '7px 15px', fontSize: 13 }}>
-            Try demo — no login
+          <Link href="/demo" className="tf-cta-main tf-nav-demo-btn" style={{ padding: '7px 15px', fontSize: 13 }}>
+            <span className="tf-btn-long">Try demo — no login</span>
+            <span className="tf-btn-short" style={{ display: 'none' }}>Demo</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </Link>
         </div>
       </nav>
 
       {/* Hero — asymmetric split, above fold */}
-      <section style={{ maxWidth: 1240, margin: '0 auto', padding: '56px 32px 64px' }}>
+      <section className="tf-hero-section" style={{ maxWidth: 1240, margin: '0 auto', padding: '56px 32px 64px' }}>
         <div className="tf-grid" style={{ display: 'grid', gridTemplateColumns: '42% 58%', gap: 56, alignItems: 'start', animation: ready ? 'tf-up 360ms cubic-bezier(0.23,1,0.32,1) 40ms both' : 'none' }}>
 
           {/* Left: copy */}
