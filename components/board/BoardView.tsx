@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { useBoardStore } from '@/store/boardStore'
 import TableView from './TableView'
 import KanbanView from './KanbanView'
+import CalendarView from './CalendarView'
+import DashboardView from './DashboardView'
 
 type View = 'table' | 'kanban' | 'calendar' | 'dashboard'
 
@@ -60,18 +62,8 @@ export default function BoardView({ boardId, boardName, boardIcon }: Props) {
       <div style={{ flex: 1, overflow: 'auto' }}>
         {view === 'table' && <TableView boardId={boardId} onAddTask={handleAddTask} onAddGroup={handleAddGroup} />}
         {view === 'kanban' && <KanbanView boardId={boardId} />}
-        {view === 'calendar' && (
-          <div style={{ padding: 40, color: '#64748b', textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📅</div>
-            <p style={{ fontSize: 16 }}>Calendar view — Pro tier</p>
-          </div>
-        )}
-        {view === 'dashboard' && (
-          <div style={{ padding: 40, color: '#64748b', textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📊</div>
-            <p style={{ fontSize: 16 }}>Dashboard view — Team tier</p>
-          </div>
-        )}
+        {view === 'calendar' && <CalendarView boardId={boardId} />}
+        {view === 'dashboard' && <DashboardView boardId={boardId} />}
       </div>
     </div>
   )

@@ -4,6 +4,7 @@ import { useWorkspaceStore } from '@/store/workspaceStore'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import UpgradeModal from '@/components/ui/UpgradeModal'
 
 const NAV_STYLE = {
   width: 220,
@@ -21,6 +22,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { workspaces, boards, fetchWorkspaces, fetchBoards, activeWorkspace, setActiveWorkspace, createWorkspace } = useWorkspaceStore()
   const { data: session } = useSession()
   const userId = session?.user?.id ?? null
+  const [showUpgrade, setShowUpgrade] = useState(false)
 
   useEffect(() => {
     if (userId) fetchWorkspaces()
@@ -107,12 +109,44 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Bottom */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12 }}>
+          {/* Plan badge */}
+          {activeWorkspace && (
+            <div style={{ marginBottom: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em',
+                  padding: '2px 8px', borderRadius: 20,
+                  background: activeWorkspace.plan === 'free' ? 'rgba(100,116,139,0.15)' : activeWorkspace.plan === 'pro' ? 'rgba(99,102,241,0.2)' : 'rgba(139,92,246,0.2)',
+                  color: activeWorkspace.plan === 'free' ? '#64748b' : activeWorkspace.plan === 'pro' ? '#a5b4fc' : '#c4b5fd',
+                }}>
+                  {activeWorkspace.plan}
+                </span>
+                {activeWorkspace.plan === 'free' && (
+                  <button
+                    onClick={() => setShowUpgrade(true)}
+                    style={{ fontSize: 11, color: '#6366f1', background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 600 }}
+                  >
+                    Upgrade ↑
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
           <p style={{ fontSize: 11, color: '#64748b', marginBottom: 4 }}>{userId?.slice(0, 8)}…</p>
           <button onClick={handleSignOut} style={{ fontSize: 12, color: '#475569', background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0' }}>
             Sign out
           </button>
         </div>
       </nav>
+
+      {/* Upgrade modal */}
+      {showUpgrade && activeWorkspace && (
+        <UpgradeModal
+          workspaceId={activeWorkspace.id}
+          currentPlan={activeWorkspace.plan as 'free' | 'pro' | 'team'}
+          onClose={() => setShowUpgrade(false)}
+        />
+      )}
 
       {/* Main */}
       <main style={{ flex: 1, overflow: 'auto' }}>
