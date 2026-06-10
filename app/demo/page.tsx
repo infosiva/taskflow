@@ -232,7 +232,7 @@ export default function DemoPage() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: '"Inter", system-ui, sans-serif', color: '#0f172a' }}>
+    <div style={{ minHeight: '100dvh', background: '#f8fafc', fontFamily: '"Inter", system-ui, sans-serif', color: '#0f172a', overflowX: 'hidden', maxWidth: '100vw' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{box-sizing:border-box}
@@ -255,16 +255,28 @@ export default function DemoPage() {
         @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
         @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
         @media(max-width:768px){.kanban-cols{flex-direction:column!important}.demo-header-right{gap:6px!important}}
+        @media(max-width:640px){
+          .demo-header-title{display:none!important}
+          .demo-header-divider{display:none!important}
+          .demo-compact-btn{display:none!important}
+          .demo-save-btn{display:none!important}
+          .demo-header-right{gap:4px!important}
+          .demo-view-btn{font-size:11px!important;padding:3px 8px!important}
+          .demo-btn{font-size:11px!important;padding:5px 8px!important}
+          .demo-header{padding:0 10px!important;overflow:hidden!important}
+          .kanban-cols{padding-bottom:20px!important}
+          .kanban-col{min-width:0!important;width:100%!important}
+        }
       `}</style>
 
       {/* Header */}
-      <header style={{ background: '#fff', borderBottom: '1px solid #f1f5f9', padding: '0 24px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
+      <header className="demo-header" style={{ background: '#fff', borderBottom: '1px solid #f1f5f9', padding: '0 24px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <Link href="/" style={{ fontWeight: 900, fontSize: 15, textDecoration: 'none', color: '#0f172a', letterSpacing: '-0.03em' }}>
             Task<span style={{ color: '#0ea5e9' }}>Flow</span>
           </Link>
-          <div style={{ height: 18, width: 1, background: '#f1f5f9' }} />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>Engineering Sprint 4</span>
+          <div className="demo-header-divider" style={{ height: 18, width: 1, background: '#f1f5f9' }} />
+          <span className="demo-header-title" style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>Engineering Sprint 4</span>
           <span style={{ fontSize: 11.5, background: '#f0f9ff', color: '#0369a1', border: '1px solid #bae6fd', borderRadius: 20, padding: '2px 9px', fontWeight: 600 }}>DEMO</span>
         </div>
         <div className="demo-header-right" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -272,14 +284,14 @@ export default function DemoPage() {
             <button className={`demo-view-btn${view === 'kanban' ? ' active' : ''}`} onClick={() => setView('kanban')}>Kanban</button>
             <button className={`demo-view-btn${view === 'table' ? ' active' : ''}`} onClick={() => setView('table')}>Table</button>
           </div>
-          <button className="demo-btn demo-btn-ghost" style={{ fontSize: 11.5 }} onClick={() => setCompact(p => !p)}>
+          <button className="demo-btn demo-btn-ghost demo-compact-btn" style={{ fontSize: 11.5 }} onClick={() => setCompact(p => !p)}>
             {compact ? '≡ Normal' : '≡ Compact'}
           </button>
           <button className="demo-btn demo-btn-primary" onClick={() => setAiPanelOpen(p => !p)}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
             AI actions
           </button>
-          <Link href="/signup" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#0f172a', color: '#fff', padding: '6px 13px', borderRadius: 7, fontSize: 12.5, fontWeight: 700, textDecoration: 'none' }}>
+          <Link href="/signup" className="demo-save-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#0f172a', color: '#fff', padding: '6px 13px', borderRadius: 7, fontSize: 12.5, fontWeight: 700, textDecoration: 'none' }}>
             Save workspace
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
           </Link>
@@ -287,14 +299,15 @@ export default function DemoPage() {
       </header>
 
       {/* Board */}
-      <main style={{ display: 'flex', height: 'calc(100vh - 52px)', overflow: 'hidden', position: 'relative' }}>
+      <main style={{ display: 'flex', height: 'calc(100dvh - 52px)', overflow: 'hidden', position: 'relative' }}>
         {/* Main board area */}
-        <div style={{ flex: 1, padding: 20, overflowY: 'auto' }}>
+        <div style={{ flex: 1, padding: 12, overflowY: 'auto', overflowX: 'hidden' }}>
           {view === 'kanban' ? (
             <div className="kanban-cols" style={{ display: 'flex', gap: 12, minHeight: 'calc(100vh - 120px)', alignItems: 'flex-start', animation: ready ? 'demo-up 280ms cubic-bezier(0.23,1,0.32,1) both' : 'none' }}>
               {COL_META.map(({ status, accent, bg }, ci) => (
                 <div
                   key={status}
+                  className="kanban-col"
                   style={{
                     flex: '1 1 0',
                     minWidth: 200,
