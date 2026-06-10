@@ -5,17 +5,21 @@ import { tasks, comments } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import { generateText } from '@/lib/ai'
 import { checkRateLimit } from '@/lib/rateLimit'
+import { checkAiQuota } from '@/lib/planGate'
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'anon'
-  const { ok } = checkRateLimit(`ai-summary:${ip}`, 20)
+  const { ok } = checkRateLimit(`ai-summary:${ip}`, 60)
   if (!ok) return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
 
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { taskId } = await req.json()
-  if (!taskId) return NextResponse.json({ error: 'taskId required' }, { status: 400 })
+  const { taskId, workspaceId } = await req.json()
+  if (!taskId || !workspaceId) return NextResponse.json({ error: 'taskId and workspaceId required' }, { status: 400 })
+
+  const quota = await checkAiQuota(workspaceId, session.user.id)
+  if (!quota.ok) return NextResponse.json({ error: quota.error }, { status: quota.status ?? 402 })
 
   const [taskRows, commentRows] = await Promise.all([
     db.select({ title: tasks.title }).from(tasks).where(eq(tasks.id, taskId)).limit(1),

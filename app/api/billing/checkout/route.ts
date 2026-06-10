@@ -5,7 +5,10 @@ import { db } from '@/lib/db'
 import { workspaces, members } from '@/db/schema'
 import { eq, and } from 'drizzle-orm'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) return null
+  return new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2024-06-20' })
+}
 
 const PRICE_IDS: Record<string, string> = {
   pro: process.env.STRIPE_PRICE_PRO!,
@@ -13,6 +16,9 @@ const PRICE_IDS: Record<string, string> = {
 }
 
 export async function POST(req: NextRequest) {
+  const stripe = getStripe()
+  if (!stripe) return NextResponse.json({ error: 'Billing not configured' }, { status: 503 })
+
   const session = await auth()
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 

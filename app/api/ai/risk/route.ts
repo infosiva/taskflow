@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { db } from '@/lib/db'
-import { tasks } from '@/db/schema'
+import { tasks, boards } from '@/db/schema'
 import { eq } from 'drizzle-orm'
 import { generateText } from '@/lib/ai'
 import { checkRateLimit } from '@/lib/rateLimit'
+import { checkAiQuota } from '@/lib/planGate'
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'anon'
-  const { ok } = checkRateLimit(`ai-risk:${ip}`, 20)
+  const { ok } = checkRateLimit(`ai-risk:${ip}`, 60)
   if (!ok) return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
 
   const session = await auth()
@@ -16,6 +17,12 @@ export async function POST(req: NextRequest) {
 
   const { boardId } = await req.json()
   if (!boardId) return NextResponse.json({ error: 'boardId required' }, { status: 400 })
+
+  const [board] = await db.select({ workspaceId: boards.workspaceId }).from(boards).where(eq(boards.id, boardId)).limit(1)
+  if (!board) return NextResponse.json({ error: 'Board not found' }, { status: 404 })
+
+  const quota = await checkAiQuota(board.workspaceId, session.user.id)
+  if (!quota.ok) return NextResponse.json({ error: quota.error }, { status: quota.status ?? 402 })
 
   const taskRows = await db
     .select({ id: tasks.id, title: tasks.title })
