@@ -159,7 +159,12 @@ export default function LandingPage() {
           .tf-nav-demo-btn .tf-btn-long{display:none!important}
           .tf-nav-demo-btn .tf-btn-short{display:inline!important}
         }
-        @media(max-width:600px){.tf-hero-h1{font-size:34px!important}.tf-steps-row{flex-direction:column!important;gap:16px!important}}
+        @media(max-width:600px){
+          .tf-hero-h1{font-size:34px!important}
+          .tf-steps-row{flex-direction:column!important;gap:16px!important;align-items:center!important}
+          .tf-step{width:100%!important;max-width:240px!important}
+          .tf-steps-row .tf-step-connector{display:none!important}
+        }
       `}</style>
 
       {/* Nav */}
@@ -296,9 +301,9 @@ export default function LandingPage() {
       </section>
 
       {/* Mobile demo strip (hidden on desktop) */}
-      <div className="tf-mobile-strip" style={{ display: 'none', overflowX: 'auto', gap: 12, padding: '0 24px 32px', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
+      <div className="tf-mobile-strip" style={{ display: 'none', overflowX: 'auto', gap: 12, padding: '0 16px 32px', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
         {['Drag & drop', 'AI assign', 'Custom columns', 'Four views'].map((label, i) => (
-          <div key={label} style={{ flexShrink: 0, scrollSnapAlign: 'start', width: 200, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16 }}>
+          <div key={label} style={{ flexShrink: 0, scrollSnapAlign: 'start', width: 160, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 14 }}>
             <div style={{ width: 28, height: 28, borderRadius: 8, background: `rgba(14,165,233,${0.1 + i * 0.18})`, marginBottom: 10 }} />
             <div style={{ fontWeight: 700, fontSize: 13, color: '#0f172a' }}>{label}</div>
             <div style={{ fontSize: 12, color: '#64748b', marginTop: 4, lineHeight: 1.5 }}>
@@ -319,10 +324,10 @@ export default function LandingPage() {
               { n: '3', label: 'Add your tasks', sub: 'Import or start fresh' },
               { n: '4', label: 'Let AI triage', sub: 'Assign, summarise, flag risk' },
             ].map((step, i) => (
-              <div key={step.n} className="tf-step" style={{ position: 'relative' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#0ea5e9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800 }}>{step.n}</div>
+              <div key={step.n} className="tf-step" style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ position: 'relative', zIndex: 1, width: 32, height: 32, borderRadius: '50%', background: '#0ea5e9', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, flexShrink: 0 }}>{step.n}</div>
                 {i < 3 && (
-                  <div style={{ position: 'absolute', top: 16, left: 'calc(50% + 16px)', right: 'calc(-50% + 16px)', height: 1, background: '#e2e8f0', transform: 'translateY(-50%)' }} />
+                  <div className="tf-step-connector" style={{ position: 'absolute', top: 16, left: '50%', right: 'calc(-100% + 16px)', height: 1, background: '#e2e8f0', marginLeft: 16 }} />
                 )}
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', textAlign: 'center', marginTop: 8 }}>{step.label}</div>
                 <div style={{ fontSize: 11.5, color: '#64748b', textAlign: 'center', marginTop: 2 }}>{step.sub}</div>
