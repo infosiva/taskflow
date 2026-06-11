@@ -38,8 +38,16 @@
  */
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type Quality = 'fast' | 'balanced' | 'best'
+export type TaskType = 'coding' | 'creative' | 'reasoning' | 'fast'
 type Msg = { role: 'user' | 'assistant'; content: string }
-export interface AIResponse { text: string; provider: string; model: string }
+export interface AIResponse { text: string; provider: string; model: string; responseMs?: number }
+
+function taskTypeToQuality(t?: TaskType): Quality {
+  if (!t) return 'balanced'
+  if (t === 'fast') return 'fast'
+  if (t === 'reasoning') return 'best'
+  return 'balanced'
+}
 
 // ── Default model tiers ───────────────────────────────────────────────────────
 // All overridable via Edge Config — these are just sensible defaults
@@ -420,6 +428,7 @@ export async function callAI(
   maxTokens = 1024,
   quality: Quality = 'balanced',
 ): Promise<AIResponse> {
+  const _start = Date.now()
   const ec = await getEdgeConfig()
 
   // Provider order: Edge Config → default
@@ -453,7 +462,7 @@ export async function callAI(
           _alertedExhaustion.add('paid-fallback')
           sendExhaustionAlert(tried)
         }
-        return { text: result.text, provider: id, model: result.model }
+        return { text: result.text, provider: id, model: result.model, responseMs: Date.now() - _start }
       }
     } catch (e: any) {
       const msg = (e.message ?? '').slice(0, 100)
@@ -515,7 +524,8 @@ export async function getProviderStatus(): Promise<Record<string, { hasKey: bool
 // Convenience wrapper for single-prompt calls
 export async function generateText(
   prompt: string,
-  opts: { maxTokens?: number; quality?: Quality } = {},
+  opts: { maxTokens?: number; quality?: Quality; taskType?: TaskType } = {},
 ): Promise<AIResponse> {
-  return callAI('You are a helpful assistant.', [{ role: 'user', content: prompt }], opts.maxTokens ?? 512, opts.quality ?? 'fast')
+  const quality = opts.quality ?? taskTypeToQuality(opts.taskType) ?? 'fast'
+  return callAI('You are a helpful assistant.', [{ role: 'user', content: prompt }], opts.maxTokens ?? 512, quality)
 }

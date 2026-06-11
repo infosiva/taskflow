@@ -6,6 +6,10 @@ import './globals.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://taskflow.app'),
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
   title: 'TaskFlow — AI-Native Project Tracker for Modern Teams',
   description: 'Monday power, Linear speed, half the price. Custom columns, 4 views, and AI features built-in free. Track tasks, manage boards, ship faster.',
   openGraph: {
@@ -29,9 +33,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '@context': 'https://schema.org',
               '@type': 'WebApplication',
               name: 'TaskFlow',
-              url: process.env.NEXT_PUBLIC_APP_URL,
+              url: process.env.NEXT_PUBLIC_APP_URL || 'https://taskflow.app',
               applicationCategory: 'BusinessApplication',
-              description: 'AI-native project tracker with custom column engine',
+              operatingSystem: 'Web',
+              description: 'AI-native project tracker with custom column engine. Auto-assign tasks, flag sprint risks, generate summaries — all in the free tier.',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                description: 'Free tier: 3 boards, 20 AI calls/month',
+              },
+              featureList: [
+                'AI auto-assign tasks before standup',
+                'Sprint risk detection',
+                'AI sprint summary in 2 sentences',
+                'Custom column engine (8 column types)',
+                'Kanban, Table, Timeline, Calendar views',
+                'No-login demo board',
+                'Import from Jira, Trello, GitHub, Linear',
+                'Agent activity feed',
+                'Free tier — 20 AI calls/month',
+              ],
             }),
           }}
         />
@@ -41,7 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FloatingChatWrapper />
         <Toaster />
         <Script defer data-domain="taskflow.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-        <Script defer data-site="taskflow.app" src="http://31.97.56.148:3098/t.js" strategy="afterInteractive" />
       </body>
     </html>
   )
