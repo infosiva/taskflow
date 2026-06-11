@@ -1,5 +1,5 @@
 # HANDOFF — TaskFlow product scope + Neon dark redesign
-**Date:** 2026-06-11  **Status:** Tracks 1, 2, 3, 5 complete. Track 4 has 1 gap (watcher-agent.ts). Track 6 has 1 minor gap (chat scope prompt).
+**Date:** 2026-06-11  **Status:** Tracks 1, 2, 3, 5, 6 complete. Track 4 has 1 gap (watcher-agent.ts — low priority).
 **Goal:** Make TaskFlow the #1 priority project: dark Neon design across all pages, competitor-gap AI features, compact mobile-first landing, migration UX, agent activity feed, and full ops infra.
 
 ---
@@ -81,7 +81,8 @@
 - [x] Briefs stats header row
 - [x] `app/api/ai/status/route.ts` — provider health debug endpoint (`getProviderStatus()`)
 - [x] Feedback section DB-backed — `app/api/feedback/route.ts` does `db.insert(feedback).values({...})`
-- [~] `FloatingChatWrapper` → `app/api/ai/chat/route.ts` — wired to Groq but model is `llama-3.1-8b-instant` (fast tier), not `llama-3.3-70b` as originally spec'd. No explicit `scope="taskflow ai project tracker"` string in system prompt — minor gap, low priority (8b-instant is correct per free-tier-first cascade rules; scope prompt could be tightened later).
+- [x] `FloatingChatWrapper` → `app/api/ai/chat/route.ts` — Groq `llama-3.1-8b-instant`, scoped system prompt ("TaskBot for TaskFlow"), rate limited 10 req/hr per IP via `checkRateLimit`
+- [x] VPS tracker tag — `app/(app)/layout.tsx` has `<Script src="http://31.97.56.148:3098/t.js">`
 
 ---
 
