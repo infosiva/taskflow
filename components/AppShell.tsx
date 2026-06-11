@@ -108,7 +108,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Agent Ops */}
-        <div style={{ marginBottom: 8 }}>
+        <div style={{ marginBottom: 4 }}>
           {(() => {
             const href = `/${activeWorkspace?.slug}/agent-ops`
             const active = pathname.includes('/agent-ops')
@@ -121,6 +121,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 transition: 'background 150ms',
               }}>
                 📡 Agent Ops
+              </Link>
+            )
+          })()}
+        </div>
+
+        {/* Migrate */}
+        <div style={{ marginBottom: 8 }}>
+          {(() => {
+            const active = pathname === '/migrate'
+            return (
+              <Link href="/migrate" style={{
+                display: 'block', padding: '7px 10px', borderRadius: 6, fontSize: 13,
+                color: active ? '#14b8a6' : '#64748b',
+                background: active ? 'rgba(20,184,166,0.1)' : 'transparent',
+                textDecoration: 'none',
+                transition: 'background 150ms',
+              }}>
+                📦 Migrate
               </Link>
             )
           })()}

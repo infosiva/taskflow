@@ -13,13 +13,7 @@ const SOURCES: { id: Source; name: string; ext: string; desc: string; accent: st
   { id: 'notion', name: 'Notion', ext: 'CSV or Markdown', desc: 'Page → ⋯ → Export → Markdown & CSV', accent: '#e8e8e8', icon: 'N' },
 ]
 
-const PREVIEW_TASKS = [
-  { title: 'Fix login redirect on mobile', status: 'Todo', priority: 'High' },
-  { title: 'Add dark mode toggle', status: 'In Progress', priority: 'Medium' },
-  { title: 'Update API rate limits', status: 'Todo', priority: 'High' },
-  { title: 'Write onboarding copy', status: 'Done', priority: 'Low' },
-  { title: 'Audit payment flow', status: 'In Progress', priority: 'High' },
-]
+type ParsedTask = { title: string; status: string; priority: string; assignee?: string; dueDate?: string }
 
 const STATUS_COLOR: Record<string, string> = {
   'Todo': 'rgba(255,255,255,0.30)',
@@ -35,20 +29,69 @@ export default function MigratePage() {
   const [dragging, setDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [importing, setImporting] = useState(false)
+  const [parsing, setParsing] = useState(false)
+  const [parsedTasks, setParsedTasks] = useState<ParsedTask[]>([])
+  const [parseError, setParseError] = useState<string | null>(null)
+  const [importedCount, setImportedCount] = useState(0)
 
   const source = SOURCES.find(s => s.id === selected)
 
+  const runParse = async (f?: File, repoUrl?: string) => {
+    setParsing(true)
+    setParseError(null)
+    const fd = new FormData()
+    fd.append('source', selected!)
+    fd.append('action', 'parse')
+    if (f) fd.append('file', f)
+    if (repoUrl) fd.append('ghRepo', repoUrl)
+    try {
+      const res = await fetch('/api/migrate', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) { setParseError(data.error || 'parse failed'); return }
+      setParsedTasks(data.tasks)
+      setStep('preview')
+    } catch {
+      setParseError('Network error — try again')
+    } finally {
+      setParsing(false)
+    }
+  }
+
   const handleFile = (f: File) => {
     setFile(f)
-    setStep('preview')
+    runParse(f)
   }
 
-  const handleImport = () => {
+  const handleFetchGithub = () => runParse(undefined, ghRepo)
+
+  const handleImport = async () => {
     setImporting(true)
-    setTimeout(() => { setStep('done') }, 1800)
+    const fd = new FormData()
+    fd.append('source', selected!)
+    fd.append('action', 'import')
+    if (file) fd.append('file', file)
+    if (ghRepo) fd.append('ghRepo', ghRepo)
+    try {
+      const res = await fetch('/api/migrate', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) {
+        if (res.status === 401) {
+          window.location.href = '/login?next=/migrate'
+          return
+        }
+        setParseError(data.error || 'import failed')
+        setImporting(false)
+        return
+      }
+      setImportedCount(data.imported)
+      setStep('done')
+    } catch {
+      setParseError('Network error — try again')
+      setImporting(false)
+    }
   }
 
-  const reset = () => { setSelected(null); setStep('pick'); setFile(null); setGhRepo('') }
+  const reset = () => { setSelected(null); setStep('pick'); setFile(null); setGhRepo(''); setParsedTasks([]); setParseError(null) }
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0b', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif', color: '#fff', position: 'relative', overflow: 'hidden' }}>
@@ -161,8 +204,8 @@ export default function MigratePage() {
                   onChange={e => setGhRepo(e.target.value)}
                   style={{ width: '100%', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 10, padding: '12px 14px', fontSize: 14, color: '#fff', outline: 'none', marginBottom: 16, fontFamily: 'inherit' }}
                 />
-                <button className="mg-btn" disabled={!ghRepo} onClick={() => setStep('preview')}>
-                  Fetch issues
+                <button className="mg-btn" disabled={!ghRepo || parsing} onClick={handleFetchGithub}>
+                  {parsing ? 'Fetching…' : 'Fetch issues'}
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </button>
               </div>
@@ -184,6 +227,14 @@ export default function MigratePage() {
               </div>
             )}
             <input id="mg-file-input" type="file" accept=".csv,.json,.xml" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
+            {parsing && (
+              <p style={{ textAlign: 'center', marginTop: 14, fontSize: 13, color: '#14b8a6' }}>Parsing file…</p>
+            )}
+            {parseError && (
+              <div style={{ marginTop: 14, background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#f87171' }}>
+                {parseError}
+              </div>
+            )}
           </div>
         )}
 
@@ -195,27 +246,33 @@ export default function MigratePage() {
                 <h2 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
                   {file ? file.name : 'Fetched issues'} → TaskFlow
                 </h2>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>{PREVIEW_TASKS.length} tasks detected — review before import</p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>{parsedTasks.length} tasks detected — review before import</p>
               </div>
               <button className="mg-btn-ghost" onClick={reset}>Start over</button>
             </div>
 
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden', marginBottom: 28 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 80px', padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '.05em' }}>
+            {parseError && (
+              <div style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 13, color: '#f87171' }}>
+                {parseError}
+              </div>
+            )}
+
+            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden', marginBottom: 28, maxHeight: 360, overflowY: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 120px 80px', padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '.05em', position: 'sticky', top: 0, background: '#0d0d0e' }}>
                 <span>Task</span><span>Status</span><span>Priority</span>
               </div>
-              {PREVIEW_TASKS.map((t, i) => (
-                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 120px 80px', padding: '11px 16px', borderBottom: i < PREVIEW_TASKS.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none', alignItems: 'center' }}>
+              {parsedTasks.map((t, i) => (
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 120px 80px', padding: '11px 16px', borderBottom: i < parsedTasks.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none', alignItems: 'center' }}>
                   <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.80)', fontWeight: 500 }}>{t.title}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: STATUS_COLOR[t.status] }}>{t.status}</span>
-                  <span style={{ fontSize: 11.5, fontWeight: 600, color: PRIORITY_COLOR[t.priority] }}>{t.priority}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: STATUS_COLOR[t.status] ?? 'rgba(255,255,255,0.30)' }}>{t.status}</span>
+                  <span style={{ fontSize: 11.5, fontWeight: 600, color: PRIORITY_COLOR[t.priority] ?? '#64748b' }}>{t.priority}</span>
                 </div>
               ))}
             </div>
 
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-              <button className="mg-btn" disabled={importing} onClick={handleImport}>
-                {importing ? 'Importing…' : `Import ${PREVIEW_TASKS.length} tasks to TaskFlow`}
+              <button className="mg-btn" disabled={importing || parsedTasks.length === 0} onClick={handleImport}>
+                {importing ? 'Importing…' : `Import ${parsedTasks.length} tasks to TaskFlow`}
                 {!importing && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>}
               </button>
             </div>
@@ -228,7 +285,7 @@ export default function MigratePage() {
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.30)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2"><path d="M5 13l4 4L19 7" /></svg>
             </div>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>All {PREVIEW_TASKS.length} tasks imported.</h2>
+            <h2 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 10 }}>All {importedCount} tasks imported.</h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.40)', marginBottom: 32 }}>Your board is ready. Invite your team and start your next sprint.</p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/signup" className="mg-btn" style={{ textDecoration: 'none' }}>
