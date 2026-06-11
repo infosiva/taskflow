@@ -207,6 +207,19 @@ export const projectBriefs = pgTable('project_briefs', {
   updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
 })
 
+export const agentPlans = pgTable('agent_plans', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  project: text('project').notNull(),
+  agentName: text('agent_name').notNull(),
+  planType: text('plan_type').notNull().default('code_push'), // 'code_push' | 'deploy' | 'migration'
+  description: text('description').notNull(),
+  filesTouch: json('files_touch').notNull().default([]), // string[]
+  steps: json('steps').notNull().default([]),            // string[]
+  status: text('status', { enum: ['pending', 'approved', 'rejected'] }).notNull().default('pending'),
+  submittedAt: timestamp('submitted_at', { mode: 'date' }).notNull().defaultNow(),
+  reviewedAt: timestamp('reviewed_at', { mode: 'date' }),
+})
+
 export const feedback = pgTable('feedback', {
   id: uuid('id').primaryKey().defaultRandom(),
   project: text('project').notNull().default('taskflow'),
