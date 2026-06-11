@@ -6,6 +6,7 @@ import { parseTrelloJson } from '@/lib/parsers/trello'
 import { fetchGithubIssues } from '@/lib/parsers/github'
 import type { ParsedTask } from '@/lib/parsers/jira'
 import { auth } from '@/auth'
+import { reportToTaskFlow } from '@/lib/reportToTaskFlow'
 
 export const runtime = 'nodejs'
 
@@ -128,6 +129,14 @@ export async function POST(req: NextRequest) {
 
     await db.insert(cellValues).values(cellRows)
   }
+
+  await reportToTaskFlow({
+    project: 'taskflow',
+    agentName: 'MigrateAgent',
+    status: 'completed',
+    message: `Imported ${parsed.length} tasks from ${source}`,
+    details: { boardId: board.id, source, taskCount: parsed.length },
+  })
 
   return NextResponse.json({
     boardId: board.id,

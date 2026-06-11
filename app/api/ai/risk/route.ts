@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm'
 import { generateText } from '@/lib/ai'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { checkAiQuota } from '@/lib/planGate'
+import { reportToTaskFlow } from '@/lib/reportToTaskFlow'
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'anon'
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
   try {
     const match = text.match(/\[[\s\S]*\]/)
     const risks = match ? JSON.parse(match[0]) : []
+    if (risks.length > 0) void reportToTaskFlow({ project: 'taskflow', agentName: 'RiskAgent', status: 'completed', message: `Flagged ${risks.length} at-risk tasks` })
     return NextResponse.json({ risks })
   } catch {
     return NextResponse.json({ risks: [] })

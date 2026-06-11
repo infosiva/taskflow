@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm'
 import { generateText } from '@/lib/ai'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { checkAiQuota } from '@/lib/planGate'
+import { reportToTaskFlow } from '@/lib/reportToTaskFlow'
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'anon'
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
   try {
     const match = text.match(/\{[\s\S]*\}/)
     const result = match ? JSON.parse(match[0]) : null
+    void reportToTaskFlow({ project: 'taskflow', agentName: 'AssignAgent', status: 'completed', message: `AI assigned task: ${task.title}` })
     return NextResponse.json({ suggestion: result })
   } catch {
     return NextResponse.json({ suggestion: null })

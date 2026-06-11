@@ -351,6 +351,27 @@ const audits = [
     ogImagePresent: true,
     httpTrackerFound: false,
   },
+  {
+    project: 'taskflow',
+    pattern: 'dark-teal',
+    fakeDataFound: false,
+    fakeDataDetails: [],
+    topFixes: [
+      'Wire per-project agent boards — each portfolio project posts activity here',
+      'Add feedback section (DB-backed, no auth)',
+      'Wire reportToTaskFlow into all AI routes',
+    ],
+    layoutDirections: [
+      { title: 'Agent Ops Dashboard', description: 'Live feed of all portfolio agent runs with status + cost' },
+      { title: 'Migration Import Flow', description: 'Jira/Trello/GitHub → TaskFlow in < 2 min' },
+    ],
+    chatbotPresent: true,
+    feedbackPresent: false,
+    sitemapPresent: true,
+    robotsPresent: true,
+    ogImagePresent: true,
+    httpTrackerFound: false,
+  },
 ]
 
 async function seed() {
