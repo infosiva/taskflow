@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm'
 import { generateText } from '@/lib/ai'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { checkAiQuota } from '@/lib/planGate'
+import { reportToTaskFlow } from '@/lib/reportToTaskFlow'
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for') || 'anon'
@@ -33,5 +34,6 @@ export async function POST(req: NextRequest) {
   const prompt = `Summarise this task in 1-2 sentences for a busy team member.\n\nTask: ${task.title}\nComments:\n${commentText}\n\nSummary:`
 
   const { text, model } = await generateText(prompt, { maxTokens: 120 })
+  void reportToTaskFlow({ project: 'taskflow', agentName: 'SummaryAgent', status: 'completed', message: `Summarised task: ${task.title}` })
   return NextResponse.json({ summary: text.trim(), model })
 }
