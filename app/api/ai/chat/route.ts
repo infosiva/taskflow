@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
 
 interface Message { role: 'user' | 'assistant' | 'system'; content: string }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'anon'
+  const { ok } = checkRateLimit(`ai-chat:${ip}`, 10)
+  if (!ok) return NextResponse.json({ error: 'Rate limit exceeded — 10 requests per hour' }, { status: 429 })
+
   try {
     const { messages } = await req.json() as { messages: Message[] }
     if (!messages?.length) return NextResponse.json({ error: 'messages required' }, { status: 400 })
