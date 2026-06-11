@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
+import FeedbackWidget from '@/components/FeedbackWidget'
 
 // Dark mesh homepage — matches auth pages (login/signup)
 // Teal #14b8a6 replaces sky #0ea5e9. Background #0a0a0b.
@@ -359,6 +360,8 @@ export default function LandingPage() {
         </div>
         <p style={{ marginTop: 14, fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>No credit card. No account needed to try.</p>
       </section>
+
+      <FeedbackWidget />
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '18px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, position: 'relative', zIndex: 1 }}>

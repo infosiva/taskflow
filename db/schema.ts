@@ -179,3 +179,12 @@ export const projectAudits = pgTable('project_audits', {
   httpTrackerFound: boolean('http_tracker_found').notNull().default(false),
   auditedAt: timestamp('audited_at', { mode: 'date' }).notNull().defaultNow(),
 })
+
+export const feedback = pgTable('feedback', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  project: text('project').notNull().default('taskflow'),
+  rating: text('rating').notNull(), // 'love' | 'meh' | 'broken'
+  message: text('message'),
+  page: text('page'),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+})
