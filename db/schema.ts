@@ -7,6 +7,7 @@ import {
   doublePrecision,
   json,
   unique,
+  boolean,
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from 'next-auth/adapters'
 
@@ -144,4 +145,37 @@ export const activityLog = pgTable('activity_log', {
   action: text('action').notNull(),
   diff: json('diff').notNull().default({}),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+})
+
+// ── Agent Ops ─────────────────────────────────────────────────────────────────
+
+export const agentRuns = pgTable('agent_runs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  project: text('project').notNull(),
+  agentName: text('agent_name').notNull(),
+  status: text('status', { enum: ['running', 'completed', 'failed', 'paused'] }).notNull().default('running'),
+  message: text('message').notNull(),
+  details: json('details').notNull().default({}),
+  durationMs: doublePrecision('duration_ms'),
+  tokenCost: doublePrecision('token_cost'),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
+})
+
+export const projectAudits = pgTable('project_audits', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  project: text('project').notNull().unique(),
+  pattern: text('pattern'),
+  fakeDataFound: boolean('fake_data_found').notNull().default(false),
+  fakeDataDetails: json('fake_data_details').notNull().default([]),
+  topFixes: json('top_fixes').notNull().default([]),
+  layoutDirections: json('layout_directions').notNull().default([]),
+  consolidationNote: text('consolidation_note'),
+  chatbotPresent: boolean('chatbot_present').notNull().default(false),
+  feedbackPresent: boolean('feedback_present').notNull().default(false),
+  sitemapPresent: boolean('sitemap_present').notNull().default(false),
+  robotsPresent: boolean('robots_present').notNull().default(false),
+  ogImagePresent: boolean('og_image_present').notNull().default(false),
+  httpTrackerFound: boolean('http_tracker_found').notNull().default(false),
+  auditedAt: timestamp('audited_at', { mode: 'date' }).notNull().defaultNow(),
 })
