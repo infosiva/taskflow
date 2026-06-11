@@ -51,9 +51,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <nav style={NAV_STYLE}>
         {/* Brand */}
-        <div style={{ marginBottom: 20 }}>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#6366f1', letterSpacing: '-0.5px' }}>
-            TaskFlow
+        <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden style={{ flexShrink: 0 }}>
+            <rect x="3" y="3" width="5" height="18" rx="1.5" fill="rgba(20,184,166,0.7)" />
+            <rect x="10" y="3" width="5" height="13" rx="1.5" fill="rgba(20,184,166,0.45)" />
+            <rect x="17" y="3" width="5" height="9" rx="1.5" fill="rgba(20,184,166,0.25)" />
+          </svg>
+          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-0.03em', color: '#fff' }}>
+            Task<span style={{ color: '#14b8a6' }}>Flow</span>
           </span>
         </div>
 
@@ -121,6 +126,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 transition: 'background 150ms',
               }}>
                 📡 Agent Ops
+              </Link>
+            )
+          })()}
+        </div>
+
+        {/* Briefs */}
+        <div style={{ marginBottom: 4 }}>
+          {(() => {
+            const active = pathname.startsWith('/briefs')
+            return (
+              <Link href="/briefs" style={{
+                display: 'block', padding: '7px 10px', borderRadius: 6, fontSize: 13,
+                color: active ? '#14b8a6' : '#64748b',
+                background: active ? 'rgba(20,184,166,0.1)' : 'transparent',
+                textDecoration: 'none',
+                transition: 'background 150ms',
+              }}>
+                📋 Briefs
               </Link>
             )
           })()}

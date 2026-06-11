@@ -95,7 +95,7 @@ const DEFAULTS: Record<string, { tiers: Record<Quality, string[]>; baseUrl: stri
     tiers: {
       fast:     ['meta-llama/llama-3.2-3b-instruct:free', 'mistralai/mistral-7b-instruct:free'],
       balanced: ['meta-llama/llama-3.3-70b-instruct:free', 'qwen/qwen-2.5-72b-instruct:free'],
-      best:     ['meta-llama/llama-4-scout:free', 'deepseek/deepseek-chat-v3-0324:free', 'google/gemma-3-27b-it:free'],
+      best:     ['google/gemini-2.5-flash:free', 'meta-llama/llama-4-scout:free', 'deepseek/deepseek-chat-v3-0324:free', 'google/gemma-3-27b-it:free'],
     },
   },
   mistral: {

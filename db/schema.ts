@@ -180,6 +180,33 @@ export const projectAudits = pgTable('project_audits', {
   auditedAt: timestamp('audited_at', { mode: 'date' }).notNull().defaultNow(),
 })
 
+export const projectBriefs = pgTable('project_briefs', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  project: text('project').notNull().unique(),
+  category: text('category').notNull().default('saas'),
+  currentBg: text('current_bg'),
+  currentPattern: text('current_pattern'),
+  // Research
+  competitors: json('competitors').notNull().default([]),  // [{name, weakness, threat}]
+  gap: text('gap'),
+  recommendedHeadline: text('recommended_headline'),
+  recommendedSubheadline: text('recommended_subheadline'),
+  strategicMoves: json('strategic_moves').notNull().default([]), // [{n, title, desc}]
+  // Design plan
+  newBg: text('new_bg'),
+  newAccent: text('new_accent'),
+  heroLayout: text('hero_layout'),
+  sectionsNeeded: json('sections_needed').notNull().default([]),
+  // Checklist (10 steps)
+  steps: json('steps').notNull().default([]), // [{n, label, done}]
+  // Status
+  status: text('status', { enum: ['pending_review', 'approved', 'in_progress', 'done', 'rejected'] }).notNull().default('pending_review'),
+  approvedAt: timestamp('approved_at', { mode: 'date' }),
+  doneAt: timestamp('done_at', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).notNull().defaultNow(),
+})
+
 export const feedback = pgTable('feedback', {
   id: uuid('id').primaryKey().defaultRandom(),
   project: text('project').notNull().default('taskflow'),

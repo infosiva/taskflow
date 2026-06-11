@@ -1,52 +1,126 @@
 # HANDOFF — TaskFlow product scope + Neon dark redesign
-**Date:** 2026-06-11  **Status:** IN PROGRESS
-**Goal:** Make TaskFlow the #1 priority project: dark Neon design applied across all pages, internal ops kanban for tracking all portfolio agents, migration UX from Jira/Trello/Asana/Linear, and full Neon DB + auth stack wired.
+**Date:** 2026-06-11  **Status:** Tracks 1, 2, 3, 5 complete. Track 4 has 1 gap (watcher-agent.ts). Track 6 has 1 minor gap (chat scope prompt).
+**Goal:** Make TaskFlow the #1 priority project: dark Neon design across all pages, competitor-gap AI features, compact mobile-first landing, migration UX, agent activity feed, and full ops infra.
+
+---
 
 ## What's done
 - [x] `app/(auth)/login/page.tsx` — dark Neon redesign, magic link, teal accent
 - [x] `app/(auth)/signup/page.tsx` — dark Neon redesign, magic link, free tier checklist
-- [x] `app/page.tsx` — dark Neon redesign (teal #14b8a6, #0a0a0b bg, radial mesh, interactive kanban demo)
+- [x] `app/page.tsx` — dark Neon redesign v2 (teal #14b8a6, #0a0a0b bg, radial mesh, interactive kanban demo, pricing section)
 - [x] Neon DB connected (DATABASE_URL, DATABASE_URL_UNPOOLED pushed to Vercel)
 - [x] Production deployed to Vercel (sivaprakasam scope)
+- [x] `db/schema.ts` — added `agent_runs` + `project_audits` tables, pushed to Neon
+- [x] `app/api/agent/activity/route.ts` — POST/GET agent run logging endpoint
+- [x] `app/api/agent/audit/route.ts` — POST/GET project audit upsert endpoint
+- [x] `app/(app)/[workspace]/agent-ops/page.tsx` — full Agent Ops dashboard (Audits + Live Feed tabs, stats bar)
+- [x] `components/AppShell.tsx` — Agent Ops + Briefs + Migrate nav links added, kanban icon + teal "Flow" brand
+- [x] `AGENT_API_KEY` + `NEXT_PUBLIC_AGENT_API_KEY` pushed to Vercel env + .env.local
+- [x] 15 portfolio project audits seeded via `scripts/seed-audits.ts`
+- [x] `app/briefs/page.tsx` — full brief review UI (sidebar + detail panel + approve/reject + stats row)
+- [x] `app/api/agent/brief/route.ts` — brief intake endpoint (used by ai-social-content research agent)
+- [x] `lib/reportToTaskFlow.ts` — shared `reportToTaskFlow(activity)` util, used by all 4 AI routes (NOTE: HANDOFF originally said `lib/report.ts` — actual filename differs)
 
-## Files to touch next
-- `app/migrate/page.tsx` — NEW: migration landing page (Jira/Trello/Asana/Linear → TaskFlow)
-- `app/app/page.tsx` (or `app/(app)/board/page.tsx`) — main app board, agent-ops mode
-- `app/layout.tsx` — ensure metadataBase, OG image, sitemap wired
-- `lib/db/schema.ts` — verify tables match product scope: tasks, boards, projects, members, agent_runs
-- `components/migration/` — CSV upload, Jira XML import, Linear JSON import parsers
+---
 
-## Product scope (user's vision)
-1. **TaskFlow as internal ops kanban** — every portfolio project gets a board, agents post task updates here
-2. **Neon CLI aesthetic** — dark `#0a0a0b`, teal `#14b8a6`, same mesh gradient style as login/signup/home
-3. **Migration UX** — easy path from Jira / Trello / Asana / Linear / GitHub Issues → TaskFlow
-4. **Agent activity feed** — agents running on other projects post status cards to TaskFlow board
+## Master checklist — 6 tracks
 
-## Migration feature scope (per project type)
-| Source | Import method | Priority |
-|--------|--------------|---------|
-| Jira | XML/CSV export upload | High |
-| Trello | JSON export upload | High |
-| Asana | CSV export upload | Medium |
-| Linear | JSON export (API or file) | Medium |
-| GitHub Issues | GitHub API (token) | High |
-| Notion | CSV/Markdown export | Low |
+### Track 1: Landing page (compact, mobile-first, competitor gap) — COMPLETE
+- [x] ≤3 viewport-heights on desktop (hero + how-it-works merged + bottom CTA)
+- [x] Remove dead href="#" nav links
+- [x] Competitor gap callout section
+- [x] Mobile strip — engaging demos
+- [x] Hero copy sharpened — Jira/Monday replacement messaging
+- [x] Pricing section (`app/page.tsx:376` — Free/Pro/Team tiers with feature lists)
+- [x] `app/sitemap.ts` exists — lists static routes
+- [x] Cold landing — `/` is a separate marketing page (not the authenticated `/[workspace]/board/:id`); non-logged-in visitors always see hero/pricing, never an empty board. Satisfied by architecture.
 
-## Steps
-- [ ] §1 Build migration landing page `app/migrate/page.tsx` — dark Neon, shows 6 source options, CSV/JSON/XML upload UI
-- [ ] §2 Build Jira XML parser — extract issues → TaskFlow task format
-- [ ] §3 Build Trello JSON parser — extract cards → task format
-- [ ] §4 Build GitHub Issues importer — gh API, repo URL + token
-- [ ] §5 Agent activity feed schema — `agent_runs` table: id, project, agent_name, status, message, ts
-- [ ] §6 Wire TaskFlow board to receive agent POST updates from other projects
-- [ ] §7 Deploy + smoke test migration page
-- [ ] §8 SEO: sitemap.ts, robots.txt, OG image, JSON-LD
+### Track 2: AI features — competitor gap — COMPLETE
+- [x] AI typing animation in demo panel
+- [x] `app/api/ai/assign/route.ts` — AI auto-assign (≈ `/api/ai/triage`)
+- [x] `app/api/ai/risk/route.ts` — sprint risk flagging
+- [x] `app/api/ai/summary/route.ts` — sprint summary (≈ `/api/ai/summarise`)
+- [x] `app/api/ai/subtasks/route.ts` — bonus: AI subtask breakdown (not in original spec)
+- [x] `taskType` routing in `taskflow/lib/ai.ts` — `generateText({ taskType })` → `taskTypeToQuality()` → `quality`, consumed by all 4 AI routes
+- [x] Llama 4 Maverick present in `taskflow/lib/ai.ts` `together` provider's `best` tier (HANDOFF said "Groq" — corrected location, same competitive intent satisfied)
+- [x] `responseMs` added to `AIResponse` type in `taskflow/lib/ai.ts`
+- [x] `gemini-2.5-flash:free` added to OpenRouter `best` tier in `taskflow/lib/ai.ts`
+- [x] All 4 AI routes wired: rate limiting (`checkRateLimit`), quota gating (`checkAiQuota`), `generateText`, `reportToTaskFlow`
+
+### Track 3: Migration UX — COMPLETE
+- [x] `app/migrate/page.tsx` — dark Neon, multi-step (`pick` → `upload` → `preview` → `done`), source cards
+- [x] Jira parser — `lib/parsers/jira.ts` (`parseJiraXml` + `parseJiraCsv`)
+- [x] Trello parser — `lib/parsers/trello.ts` (`parseTrelloJson`)
+- [x] GitHub Issues importer — `lib/parsers/github.ts` (`fetchGithubIssues`, REST API + token)
+- [x] CSV upload fallback — `parseJiraCsv` handles generic CSV
+- [x] Preview step before import confirms (`app/migrate/page.tsx` step 3)
+- [x] `app/api/migrate/route.ts` — single unified route, `source` param dispatches to jira/trello/github/linear/asana/notion (HANDOFF spec'd 3 separate routes — unified route covers same ground)
+
+### Track 4: Agent activity feed + reporting — 1 GAP REMAINING
+- [x] `agent_runs` table + `project_audits` table in Neon
+- [x] POST `/api/agent/activity` live
+- [x] Agent Ops dashboard shows live feed
+- [x] `lib/reportToTaskFlow.ts` — shared util (corrected path from `lib/report.ts`)
+- [x] AI routes (assign/risk/summary/subtasks) call `reportToTaskFlow()` — portfolio integration started
+- [ ] **GAP**: `scripts/watcher-agent.ts` — global watcher (polls briefs, Playwright smoke tests, Telegram alerts) — NOT BUILT. Genuine remaining work, not yet scheduled.
+- [ ] Other portfolio projects (beyond taskflow's own AI routes) calling `reportToTaskFlow()` on deploy — not verified/rolled out
+
+### Track 5: SEO + CRO — COMPLETE
+- [x] `metadataBase` set in layout.tsx
+- [x] `title` keyword-rich: "TaskFlow — AI-Native Project Tracker for Modern Teams"
+- [x] OG image `/og.png` 1200×630
+- [x] `public/robots.txt` correct
+- [x] `app/sitemap.ts` exists
+- [x] JSON-LD: `WebApplication` schema with `applicationCategory` + `featureList` (`app/layout.tsx:34-46`)
+- [x] Pricing section (shared with Track 1)
+
+### Track 6: Product UX polish — 1 MINOR GAP
+- [x] Compact mode toggle in demo panel
+- [x] Drag-drop kanban in demo panel
+- [x] AppShell icon before brand text
+- [x] Briefs stats header row
+- [x] `app/api/ai/status/route.ts` — provider health debug endpoint (`getProviderStatus()`)
+- [x] Feedback section DB-backed — `app/api/feedback/route.ts` does `db.insert(feedback).values({...})`
+- [~] `FloatingChatWrapper` → `app/api/ai/chat/route.ts` — wired to Groq but model is `llama-3.1-8b-instant` (fast tier), not `llama-3.3-70b` as originally spec'd. No explicit `scope="taskflow ai project tracker"` string in system prompt — minor gap, low priority (8b-instant is correct per free-tier-first cascade rules; scope prompt could be tightened later).
+
+---
+
+## AI competitor gap table
+
+| Feature | Jira | Linear | Monday | Notion | TaskFlow |
+|---------|------|--------|--------|--------|----------|
+| AI auto-assign (context-aware) | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Sprint risk flag before standup | ❌ | ❌ | ❌ | ❌ | ✅ |
+| AI sprint summary (2 sentences) | ❌ | partial | ❌ | partial | ✅ |
+| Free AI tier (20 calls/mo) | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Agent activity feed (bots post) | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Compact density mode (28px rows) | ❌ | ✅ | ❌ | ❌ | ✅ |
+| No-login demo board | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+## Key paths
+- Landing: `taskflow/app/page.tsx`
+- App shell: `taskflow/components/AppShell.tsx`
+- Briefs: `taskflow/app/briefs/page.tsx`
+- Agent Ops: `taskflow/app/(app)/[workspace]/agent-ops/page.tsx`
+- DB schema: `taskflow/db/schema.ts`
+- AI cascade: `taskflow/lib/ai.ts` (own copy, separate from `ai-platform-template/lib/ai.ts`)
+- Agent activity reporter: `taskflow/lib/reportToTaskFlow.ts`
+- Migration: `taskflow/app/migrate/page.tsx` + `app/api/migrate/route.ts` + `lib/parsers/{jira,trello,github}.ts`
+- Agent API key: `.env.local` only — never commit
+
+---
 
 ## Success criteria
-- Migration page loads, accepts Jira CSV/XML, shows preview before import
-- Agent can POST a task update to TaskFlow board via API
-- Homepage, login, signup all dark Neon — no light theme anywhere
-- Build passes, Playwright screenshots taken
+- Landing page fits ≤3vh desktop, no scroll to see CTA + demo — MET
+- Mobile strip shows real feature previews — MET
+- Competitor gap section visible above fold or 1 scroll max — MET
+- Migration page loads, accepts Jira CSV/XML, shows preview before import — MET
+- Agent can POST task update via `/api/agent/activity` — MET
+- All dark Neon — no light theme anywhere — MET
+- Build passes, Playwright screenshots taken — pending re-verification after this audit
 
 ## Resume from here if interrupted
-Homepage redesign written. Next: build migration landing page §1.
+**Last completed:** Full 6-track audit reconciling HANDOFF claims vs actual repo state. Tracks 1/2/3/5 confirmed fully complete (most were already done but mismarked `[ ]`). Track 4 has 1 real gap (`scripts/watcher-agent.ts` not built). Track 6 has 1 minor gap (chat route scope prompt).
+**Next:** Either (a) build `scripts/watcher-agent.ts` if prioritized, or (b) move to next portfolio project — TaskFlow core scope is functionally complete. Run `npm run build` + Playwright 375px/1280px screenshots before next deploy to confirm no regressions from this multi-session arc's edits to `lib/ai.ts`.

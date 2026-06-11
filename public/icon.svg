@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0a0a0b"/>
+  <!-- Kanban columns -->
+  <rect x="80" y="160" width="90" height="220" rx="10" fill="#1e293b"/>
+  <rect x="211" y="160" width="90" height="220" rx="10" fill="#1e293b"/>
+  <rect x="342" y="160" width="90" height="220" rx="10" fill="#1e293b"/>
+  <!-- Cards col 1 -->
+  <rect x="92" y="175" width="66" height="28" rx="6" fill="#14b8a6"/>
+  <rect x="92" y="211" width="66" height="28" rx="6" fill="#1e3a4a"/>
+  <rect x="92" y="247" width="66" height="28" rx="6" fill="#1e3a4a"/>
+  <!-- Cards col 2 -->
+  <rect x="223" y="175" width="66" height="28" rx="6" fill="#2563eb"/>
+  <rect x="223" y="211" width="66" height="28" rx="6" fill="#1e3a4a"/>
+  <!-- Cards col 3 -->
+  <rect x="354" y="175" width="66" height="28" rx="6" fill="#14b8a6" opacity="0.5"/>
+  <!-- Top label dots -->
+  <circle cx="125" cy="145" r="7" fill="#14b8a6"/>
+  <circle cx="256" cy="145" r="7" fill="#2563eb"/>
+  <circle cx="387" cy="145" r="7" fill="#475569"/>
+</svg>
