@@ -9,7 +9,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 
 const TASKFLOW_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://taskflow.app'
 const API_KEY = process.env.AGENT_API_KEY || ''
@@ -60,30 +60,33 @@ function appRoot(dir: string): string {
   return path.join(dir, 'app') // fallback
 }
 
+function searchDirs(dir: string): string[] {
+  return [
+    path.join(dir, 'app'), path.join(dir, 'src/app'),
+    path.join(dir, 'lib'), path.join(dir, 'src/lib'),
+    // monorepo (agenttrace)
+    path.join(dir, 'apps/dashboard/src/app'), path.join(dir, 'apps/dashboard/src/lib'),
+    path.join(dir, 'apps/dashboard/src/components'), path.join(dir, 'components'), path.join(dir, 'src/components'),
+  ].filter(d => fs.existsSync(d))
+}
+
 function grepR(dir: string, pattern: string): boolean {
   try {
-    // Search both app/ and src/app/
-    const targets = [path.join(dir, 'app'), path.join(dir, 'src/app'), path.join(dir, 'lib'), path.join(dir, 'src/lib')]
-      .filter(d => fs.existsSync(d))
-      .map(d => `"${d}"`)
-      .join(' ')
-    if (!targets) return false
-    const result = execSync(`grep -rl -F "${pattern}" ${targets} 2>/dev/null || true`, { encoding: 'utf8' })
+    const targets = searchDirs(dir)
+    if (!targets.length) return false
+    const result = execFileSync('grep', ['-rl', '-F', pattern, ...targets], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
     return result.trim().length > 0
   } catch { return false }
 }
 
-// Grep with regex pattern using execSync args array to avoid shell quoting issues
+// Grep with regex pattern
 function grepRE(dir: string, pattern: string): boolean {
   try {
-    const targets = [path.join(dir, 'app'), path.join(dir, 'src/app'), path.join(dir, 'lib'), path.join(dir, 'src/lib')]
-      .filter(d => fs.existsSync(d))
+    const targets = searchDirs(dir)
     if (!targets.length) return false
-    const { execFileSync } = require('child_process')
     const result = execFileSync('grep', ['-rlE', pattern, ...targets], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
     return result.trim().length > 0
-  } catch (e: any) {
-    // grep exits 1 when no matches — that's not an error
+  } catch {
     return false
   }
 }
@@ -107,17 +110,18 @@ function checkProject(project: string): CheckResult[] {
   // 1. sitemap.ts exists
   checks.push({ id: 'sitemap', pass: isAppRoot('sitemap.ts') || isAppRoot('sitemap.tsx') })
 
-  // 2. robots.txt exists
-  checks.push({ id: 'robots', pass: fileExists(dir, 'public/robots.txt') })
+  // 2. robots.txt exists (check monorepo path too)
+  const monoPublic = path.join(dir, 'apps/dashboard/public')
+  checks.push({ id: 'robots', pass: fileExists(dir, 'public/robots.txt') || fs.existsSync(path.join(monoPublic, 'robots.txt')) })
 
-  // 3. og.png exists
-  checks.push({ id: 'og_png', pass: fileExists(dir, 'public/og.png') })
+  // 3. og.png exists (check monorepo path too)
+  checks.push({ id: 'og_png', pass: fileExists(dir, 'public/og.png') || fs.existsSync(path.join(monoPublic, 'og.png')) })
 
   // 4. metadataBase set in layout
   checks.push({ id: 'metadataBase', pass: appContains('layout.tsx', 'metadataBase') })
 
-  // 5. JSON-LD in layout
-  checks.push({ id: 'json_ld', pass: appContains('layout.tsx', 'application/ld+json') })
+  // 5. JSON-LD in layout or via SchemaOrg component
+  checks.push({ id: 'json_ld', pass: appContains('layout.tsx', 'application/ld+json') || appContains('layout.tsx', 'SchemaOrg') || grepR(dir, 'application/ld+json') })
 
   // 6. No fake stats
   const fakePatterns = ['10,000 users', '50,000', '100,000 users', '4.9/5', '★★★★★']
@@ -139,8 +143,14 @@ function checkProject(project: string): CheckResult[] {
     grepRE(dir, "process\\.env\\.[A-Z_]+ \\|\\| ['\"]AIza")
   checks.push({ id: 'no_hardcoded_keys', pass: !hasHardcodedKey })
 
-  // 11. .env not committed
-  checks.push({ id: 'no_env_committed', pass: !fileExists(dir, '.env') })
+  // 11. .env not committed (check git tracking, not filesystem presence)
+  const envTracked = (() => {
+    try {
+      const r = execFileSync('git', ['ls-files', '.env'], { cwd: dir, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
+      return r.trim().length > 0
+    } catch { return false }
+  })()
+  checks.push({ id: 'no_env_committed', pass: !envTracked })
 
   // 12. package.json exists
   checks.push({ id: 'package_json', pass: fileExists(dir, 'package.json') })
