@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Toaster } from '@/components/ui/sonner'
 import FloatingChatWrapper from '@/components/FloatingChatWrapper'
+import FeedbackWidget from '@/components/FeedbackWidget'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <FloatingChatWrapper />
+        <FeedbackWidget />
         <Toaster />
         <Script defer data-domain="taskflow.app" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
       </body>
