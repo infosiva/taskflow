@@ -224,6 +224,268 @@ export default function LayoutsPage() {
         </div>
       ),
     },
+    // ── T8–T17 NEW ARCHETYPES ──────────────────────────────────────────────
+    {
+      id: 'T8',
+      name: 'Swiss Editorial Grid',
+      template: 'TEMPLATE 8',
+      projects: ['worldtrends', 'mandirates'],
+      bg: '#f9fafb', accent: '#dc2626', dark: false,
+      skills: ['/swiss-creative-mode-template (OD)', '/digits-fintech-swiss-template (OD)', '/d3-visualization', '/gsap-core'],
+      panel: 'Full-width — large metric numbers count up 0→value on load. No split.',
+      description: '12-col strict grid. Full-width. Large type. Metric cards row. Data IS the hero.',
+      demo: (
+        <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: 16, minHeight: 120 }}>
+          <div style={{ fontSize: 18, fontWeight: 900, color: '#0a0a0a', letterSpacing: '-0.03em', marginBottom: 4 }}>Market prices. Real time.</div>
+          <div style={{ width: '60%', height: 1, background: '#dc2626', marginBottom: 12 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+            {[['₹2,840', 'Wheat/q'], ['₹4,120', 'Rice/q'], ['↑ 3.2%', 'Avg rise']].map(([v, l]) => (
+              <div key={l} style={{ border: '1px solid #e5e7eb', borderRadius: 6, padding: '8px 10px' }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: '#0a0a0a', fontVariantNumeric: 'tabular-nums' }}>{v}</div>
+                <div style={{ fontSize: 9, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T9',
+      name: 'Bento Grid Dashboard',
+      template: 'TEMPLATE 9',
+      projects: ['meetscribe', 'weekendai', 'zerostaff'],
+      bg: '#ffffff', accent: '#0ea5e9', dark: false,
+      skills: ['/shadcn-ui (OD)', '/ui-skills (OD)', '/animate', '/transitions-dev'],
+      panel: 'Mosaic of unequal cards — cells stagger-enter, hover lifts 4px.',
+      description: 'Bento mosaic above fold. No split hero. Grid IS the layout. Cards show live product snippets.',
+      demo: (
+        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12, padding: 12, minHeight: 120 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: 'auto auto', gap: 8 }}>
+            <div style={{ gridColumn: '1', gridRow: '1 / span 2', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 10, padding: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Meet notes, instantly.</div>
+              <div style={{ fontSize: 9, color: '#64748b', marginBottom: 8 }}>AI transcribes + summarises every meeting</div>
+              <div style={{ width: 80, height: 24, background: '#0ea5e9', borderRadius: 6 }} />
+            </div>
+            <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: 10 }}>
+              <div style={{ fontSize: 9, color: '#059669', fontWeight: 600 }}>Last meeting</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', marginTop: 2 }}>Q2 Planning</div>
+              <div style={{ fontSize: 8, color: '#64748b' }}>8 action items</div>
+            </div>
+            <div style={{ background: '#fefce8', border: '1px solid #fef08a', borderRadius: 10, padding: 10 }}>
+              <div style={{ fontSize: 9, color: '#ca8a04', fontWeight: 600 }}>This week</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', marginTop: 2 }}>4 meetings</div>
+              <div style={{ fontSize: 8, color: '#64748b' }}>saved 3.2h</div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T10',
+      name: 'Cinematic Full-Bleed',
+      template: 'TEMPLATE 10',
+      projects: ['clipforge', 'nammatamil', 'ninjapa'],
+      bg: '#0a0a0f', accent: '#e879f9', dark: true,
+      skills: ['/after-hours-editorial-template (OD)', '/gsap-scrolltrigger', '/fal-kling-o3'],
+      panel: 'Full-viewport video/generative bg. Content centered on dark overlay. Scroll scrubs video.',
+      description: 'Full-bleed hero. Video or generative canvas bg. Dark overlay. Centered text. Scroll-driven.',
+      demo: (
+        <div style={{ background: 'linear-gradient(135deg,#0a0a0f 0%,#1a0a2e 50%,#0a0a0f 100%)', border: '1px solid rgba(232,121,249,0.2)', borderRadius: 12, padding: 16, minHeight: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(232,121,249,0.08) 0%, transparent 70%)' }} />
+          <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: 8, color: '#e879f9', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 6 }}>AI Video Editing</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: 8 }}>Cut. Create. Ship.</div>
+            <div style={{ width: 80, height: 24, background: '#e879f9', borderRadius: 6, margin: '0 auto' }} />
+          </div>
+          <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', fontSize: 8, color: 'rgba(255,255,255,0.4)' }}>↓ scroll</div>
+        </div>
+      ),
+    },
+    {
+      id: 'T11',
+      name: 'Typewriter Terminal (Centered)',
+      template: 'TEMPLATE 11',
+      projects: ['neuralos', 'ninjapa', 'rideflow'],
+      bg: '#060d1a', accent: '#22d3ee', dark: true,
+      skills: ['/interface-design (OD)', '/gsap-timeline', '/animate'],
+      panel: 'Terminal lines appear one-by-one. Cursor blinks. CTA fades in after sequence. No split.',
+      description: 'Single centered column. Terminal sequence IS the demo. No right panel.',
+      demo: (
+        <div style={{ background: '#060d1a', border: '1px solid rgba(34,211,238,0.2)', borderRadius: 12, padding: 16, minHeight: 120 }}>
+          <div style={{ textAlign: 'center', marginBottom: 10 }}>
+            <div style={{ fontSize: 8, color: '#22d3ee', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 4 }}>AI Infrastructure</div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#f8fafc' }}>Run agents in production.</div>
+          </div>
+          <div style={{ background: '#030712', border: '1px solid rgba(34,211,238,0.15)', borderRadius: 8, padding: '10px 12px', fontFamily: 'monospace' }}>
+            {[
+              { c: '#94a3b8', t: '$ initializing neuralos agent...' },
+              { c: '#22d3ee', t: '✓ connected to orchestrator' },
+              { c: '#4ade80', t: '$ running task: analyze_logs' },
+              { c: '#f8fafc', t: '█' },
+            ].map((l, i) => <div key={i} style={{ fontSize: 9, color: l.c, marginBottom: 3 }}>{l.t}</div>)}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T12',
+      name: 'Magazine Editorial',
+      template: 'TEMPLATE 12',
+      projects: ['nammatamil', 'bookingcall'],
+      bg: '#fffbf5', accent: '#f97316', dark: false,
+      skills: ['/field-notes-editorial-template (OD)', '/editorial-burgundy-principles-template (OD)', '/gsap-scrolltrigger', '/emil-design-eng'],
+      panel: 'Serif headline. 2-col editorial grid. Masonry service/topic cards stagger on scroll.',
+      description: 'Newspaper/magazine feel. Playfair Display serif. Editorial column layout. Warm paper bg.',
+      demo: (
+        <div style={{ background: '#fffbf5', border: '1px solid #fed7aa', borderRadius: 12, padding: 16, minHeight: 120 }}>
+          <div style={{ borderBottom: '1px solid #f97316', paddingBottom: 6, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 8, color: '#f97316', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 700 }}>Tamil Culture</span>
+            <span style={{ fontSize: 8, color: '#9a7b5a' }}>June 2026</span>
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: '#1c0a00', fontStyle: 'italic', lineHeight: 1.2, marginBottom: 8 }}>Stories that bind us together.</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+            {['Cinema', 'Music', 'Culture'].map(t => (
+              <div key={t} style={{ background: '#fff', border: '1px solid #fed7aa', borderRadius: 6, padding: '6px 8px', fontSize: 9, color: '#1c0a00', fontWeight: 600 }}>{t}</div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T13',
+      name: 'Floating Cards / Orbit',
+      template: 'TEMPLATE 13',
+      projects: ['aicoachlab', 'weekendai', 'playsmart'],
+      bg: '#fff7ed', accent: '#ea580c', dark: false,
+      skills: ['/design-shotgun', '/algorithmic-art (OD)', '/animate', '/emil-design-eng'],
+      panel: 'Feature cards float at angles around centered headline. Drift animation. Hover snaps to grid.',
+      description: 'Center headline + CTA. Topic/feature cards orbit at random rotations. Subtle drift.',
+      demo: (
+        <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 12, padding: 16, minHeight: 120, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {[
+            { label: 'Interview Prep', top: 10, left: 10, rot: -8 },
+            { label: 'Resume Review', top: 10, right: 10, rot: 6 },
+            { label: 'Salary Negotiation', bottom: 10, left: 10, rot: 5 },
+            { label: 'Career Switch', bottom: 10, right: 10, rot: -7 },
+          ].map((c, i) => (
+            <div key={i} style={{ position: 'absolute', top: c.top, left: c.left, bottom: c.bottom, right: c.right, background: '#fff', border: '1px solid #fed7aa', borderRadius: 8, padding: '5px 9px', fontSize: 9, fontWeight: 600, color: '#431407', transform: `rotate(${c.rot}deg)`, boxShadow: '0 2px 8px rgba(234,88,12,0.1)' }}>{c.label}</div>
+          ))}
+          <div style={{ textAlign: 'center', zIndex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 800, color: '#1c0a00', marginBottom: 6 }}>Your AI career coach</div>
+            <div style={{ width: 80, height: 24, background: '#ea580c', borderRadius: 6, margin: '0 auto' }} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T14',
+      name: 'Generative Art Background',
+      template: 'TEMPLATE 14',
+      projects: ['pixelforge', 'playsmart', 'clipforge'],
+      bg: '#0e0e16', accent: '#a78bfa', dark: true,
+      skills: ['/shader-dev (OD)', '/algorithmic-art (OD)', '/threejs (OD)', '/animate'],
+      panel: 'WebGL/canvas procedural bg unique per visit. Responds to mouse. Content overlaid.',
+      description: 'Full-viewport generative canvas behind content. SSR-safe. prefers-reduced-motion static fallback.',
+      demo: (
+        <div style={{ background: '#0e0e16', border: '1px solid rgba(167,139,250,0.2)', borderRadius: 12, padding: 16, minHeight: 120, position: 'relative', overflow: 'hidden' }}>
+          {/* Fake pixel grid */}
+          <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: 'repeat(12,1fr)', gridTemplateRows: 'repeat(6,1fr)', gap: 1, opacity: 0.3 }}>
+            {Array.from({ length: 72 }).map((_, i) => (
+              <div key={i} style={{ background: i % 7 === 0 ? '#a78bfa' : i % 5 === 0 ? '#7c3aed' : i % 3 === 0 ? '#4c1d95' : 'transparent', borderRadius: 1 }} />
+            ))}
+          </div>
+          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', paddingTop: 16 }}>
+            <div style={{ fontSize: 8, color: '#a78bfa', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 4 }}>Pixel Art Studio</div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Create. Play. Ship.</div>
+            <div style={{ width: 80, height: 24, background: '#a78bfa', borderRadius: 6 }} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T15',
+      name: 'D3 Live Data Hero',
+      template: 'TEMPLATE 15',
+      projects: ['trackwealth', 'mandirates', 'agenttrace'],
+      bg: '#0b1420', accent: '#f59e0b', dark: true,
+      skills: ['/d3-visualization (OD)', '/gsap-core', '/animate'],
+      panel: 'D3 chart IS the right panel. Line/bar chart animates in on mount. Updates every 5s.',
+      description: 'Split hero but right panel = live D3 chart. Chart draws on mount. Real/seed data.',
+      demo: (
+        <div style={{ background: '#0b1420', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 12, padding: 16, display: 'flex', gap: 12, minHeight: 120 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 8, color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>Portfolio Analytics</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#f8fafc', marginBottom: 4 }}>Track every penny.</div>
+            <div style={{ fontSize: 9, color: '#94a3b8', marginBottom: 10 }}>Real-time portfolio tracking</div>
+            <div style={{ width: 80, height: 24, background: '#f59e0b', borderRadius: 6 }} />
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 2 }}>
+            {/* Mini bar chart */}
+            {[40, 55, 35, 70, 60, 85, 75].map((h, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
+                <div style={{ width: `${h}%`, height: 8, background: i === 6 ? '#f59e0b' : 'rgba(245,158,11,0.3)', borderRadius: 2 }} />
+              </div>
+            ))}
+            <div style={{ fontSize: 8, color: '#f59e0b', marginTop: 4, fontFamily: 'monospace' }}>+18.4% this month</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T16',
+      name: 'Full-Width Input Hero',
+      template: 'TEMPLATE 16',
+      projects: ['speakiq', 'resumevault', 'pdfideas'],
+      bg: '#fdf4ff', accent: '#9333ea', dark: false,
+      skills: ['/frontend-design (OD)', '/shadcn-ui (OD)', '/transitions-dev', '/animate'],
+      panel: 'Giant input IS the hero. Placeholder cycles queries (typewriter). Real API on submit. Result slides in below.',
+      description: 'Single centered column. No split. Input bar dominates. Core action zero-auth inline.',
+      demo: (
+        <div style={{ background: '#fdf4ff', border: '1px solid #e9d5ff', borderRadius: 12, padding: 16, minHeight: 120 }}>
+          <div style={{ textAlign: 'center', marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#1e1b4b', marginBottom: 4 }}>Speak any language.</div>
+          </div>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
+            <div style={{ flex: 1, background: '#fff', border: '2px solid #9333ea', borderRadius: 10, padding: '8px 12px', fontSize: 10, color: '#6b21a8' }}>Type a word in any language...</div>
+            <div style={{ width: 36, height: 36, background: '#9333ea', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ color: '#fff', fontSize: 12 }}>→</span>
+            </div>
+          </div>
+          <div style={{ background: '#f3e8ff', border: '1px solid #d8b4fe', borderRadius: 8, padding: '8px 12px' }}>
+            <div style={{ fontSize: 9, color: '#7e22ce', fontWeight: 600 }}>Pronunciation: /bonjuːr/</div>
+            <div style={{ fontSize: 8, color: '#6b21a8', marginTop: 2 }}>French → "Good day" — Formal greeting, used morning to evening</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'T17',
+      name: 'Asymmetric Split (60/40)',
+      template: 'TEMPLATE 17',
+      projects: ['quizbytesdaily', 'replydesk', 'draftcal'],
+      bg: '#f0f9ff', accent: '#7c3aed', dark: false,
+      skills: ['/ui-skills (OD)', '/frontend-design (OD)', '/gsap-scrolltrigger', '/animate', '/transitions-dev'],
+      panel: 'Dominant side (3fr) = product demo sticky. Minor side (2fr) = headline scrolls past.',
+      description: 'lg:grid-cols-[3fr_2fr] or [2fr_3fr]. One side dominates visually. Not equal columns.',
+      demo: (
+        <div style={{ background: '#f0f9ff', border: '1px solid #c7d2fe', borderRadius: 12, padding: 12, minHeight: 120, display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 8 }}>
+          {/* Dominant — quiz card */}
+          <div style={{ background: '#fff', border: '2px solid #7c3aed', borderRadius: 10, padding: 12 }}>
+            <div style={{ fontSize: 9, color: '#7c3aed', fontWeight: 600, marginBottom: 6 }}>Daily Quiz — June 17</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>Who wrote Hamlet?</div>
+            {['Marlowe', 'Shakespeare', 'Chaucer', 'Milton'].map((o, i) => (
+              <div key={o} style={{ background: i === 1 ? '#ede9fe' : '#f8fafc', border: `1px solid ${i === 1 ? '#7c3aed' : '#e2e8f0'}`, borderRadius: 6, padding: '4px 8px', fontSize: 9, color: i === 1 ? '#7c3aed' : '#64748b', marginBottom: 3, fontWeight: i === 1 ? 600 : 400 }}>{o}</div>
+            ))}
+          </div>
+          {/* Minor — copy */}
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>One quiz. Every day.</div>
+            <div style={{ fontSize: 9, color: '#64748b', marginBottom: 8 }}>Sharpen your mind in 2 minutes</div>
+            <div style={{ width: 70, height: 24, background: '#7c3aed', borderRadius: 6 }} />
+          </div>
+        </div>
+      ),
+    },
   ]
 
   return (
@@ -231,9 +493,9 @@ export default function LayoutsPage() {
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ marginBottom: 32 }}>
           <div style={{ fontSize: 11, color: '#6366f1', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Design System</div>
-          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0, marginBottom: 8 }}>Layout Templates</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0, marginBottom: 8 }}>Layout Templates — T1 to T17</h1>
           <p style={{ color: '#94a3b8', margin: 0, fontSize: 14 }}>
-            7 layout archetypes — each with unique bg/accent, animated demo panel, and mandatory skill pipeline.
+            17 layout archetypes — each with unique bg/accent, animated demo panel, and mandatory skill pipeline.
             Source: <code style={{ color: '#818cf8', fontSize: 12 }}>design-system/LAYOUT-PROMPTS.md</code> +
             <code style={{ color: '#818cf8', fontSize: 12 }}> design-system/MASTER.md</code>
           </p>
