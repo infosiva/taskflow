@@ -19,6 +19,14 @@ const PORTFOLIO_PROJECTS = [
   'kwizzo', 'speakiq', 'resumevault', 'draftcal', 'trackwealth',
   'roamplan', 'worldtrends', 'myvitals', 'aicoachlab', 'neuralos',
   'pixelforge', 'agenttrace',
+  'agencyos', 'ai-jobs-portal', 'ai-resume-screener', 'ai-social-content',
+  'ai-toolkit', 'anylocal', 'billslash', 'bookingcall', 'campaignforge',
+  'clawdbotai', 'clipforge-ai', 'complybuddy', 'firstline', 'homecanvas',
+  'hub', 'idea-agent', 'invoicemint', 'mandirates', 'meetscribe',
+  'nammatamil', 'outreach-crm', 'parceliq', 'pdfideas', 'photorestore',
+  'playsmart', 'protoforge', 'quicktech', 'quizbites', 'quizbytesdaily',
+  'replydesk', 'rideflow', 'tutiq', 'vidrush', 'voicejournal',
+  'weekendai', 'yt-portal', 'zerostaff',
 ]
 
 type CheckResult = { id: string; pass: boolean; detail?: string }
