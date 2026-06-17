@@ -151,7 +151,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Migrate */}
-        <div style={{ marginBottom: 8 }}>
+        <div style={{ marginBottom: 4 }}>
           {(() => {
             const active = pathname === '/migrate'
             return (
@@ -163,6 +163,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 transition: 'background 150ms',
               }}>
                 📦 Migrate
+              </Link>
+            )
+          })()}
+        </div>
+
+        {/* Layout Archetypes */}
+        <div style={{ marginBottom: 8 }}>
+          {(() => {
+            const active = pathname.startsWith('/admin/layouts')
+            return (
+              <Link href="/admin/layouts" style={{
+                display: 'block', padding: '7px 10px', borderRadius: 6, fontSize: 13,
+                color: active ? '#a78bfa' : '#64748b',
+                background: active ? 'rgba(167,139,250,0.1)' : 'transparent',
+                textDecoration: 'none',
+                transition: 'background 150ms',
+              }}>
+                🎨 Layout Templates
               </Link>
             )
           })()}
