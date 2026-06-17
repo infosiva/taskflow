@@ -6,7 +6,8 @@ import Script from 'next/script'
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
-  if (!session) redirect('/login')
+  const isDev = process.env.NODE_ENV === 'development'
+  if (!session && !isDev) redirect('/login')
   return (
     <Providers>
       <AppShell>{children}</AppShell>

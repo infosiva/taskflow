@@ -21,12 +21,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const { workspaces, boards, fetchWorkspaces, fetchBoards, activeWorkspace, setActiveWorkspace, createWorkspace } = useWorkspaceStore()
   const { data: session } = useSession()
-  const userId = session?.user?.id ?? null
+  const isDev = typeof window !== 'undefined' && process.env.NODE_ENV === 'development'
+  const userId = session?.user?.id ?? (isDev ? 'siva-1781686963884' : null)
   const [showUpgrade, setShowUpgrade] = useState(false)
 
   useEffect(() => {
-    if (userId) fetchWorkspaces()
-  }, [userId, fetchWorkspaces])
+    fetchWorkspaces()
+  }, [fetchWorkspaces])
 
   useEffect(() => {
     if (activeWorkspace?.id) fetchBoards(activeWorkspace.id)

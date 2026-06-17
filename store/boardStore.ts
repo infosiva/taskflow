@@ -40,12 +40,28 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ loading: true })
     const res = await fetch(`/api/boards/${boardId}/data`)
     if (!res.ok) { set({ loading: false }); return }
-    const { groups, tasks, columns, cells } = await res.json()
+    const data = await res.json()
+
+    // Drizzle returns camelCase; UI types expect snake_case — remap here
+    const tasks: Task[] = (data.tasks ?? []).map((t: Record<string, unknown>) => ({
+      id: t.id, group_id: t.groupId ?? t.group_id, board_id: t.boardId ?? t.board_id,
+      title: t.title, position: t.position, created_by: t.createdBy ?? t.created_by ?? '',
+      created_at: t.createdAt ?? t.created_at ?? '',
+    }))
+    const groups: Group[] = (data.groups ?? []).map((g: Record<string, unknown>) => ({
+      id: g.id, board_id: g.boardId ?? g.board_id, name: g.name, color: g.color, position: g.position,
+    }))
+    const columns: Column[] = (data.columns ?? []).map((c: Record<string, unknown>) => ({
+      id: c.id, board_id: c.boardId ?? c.board_id, name: c.name, type: c.type,
+      config: c.config, position: c.position,
+    }))
 
     const cellMap: Record<string, Record<string, CellValue>> = {}
-    for (const cell of (cells ?? []) as CellValue[]) {
-      if (!cellMap[cell.task_id]) cellMap[cell.task_id] = {}
-      cellMap[cell.task_id][cell.column_id] = cell
+    for (const cell of (data.cells ?? []) as Record<string, unknown>[]) {
+      const tid = (cell.taskId ?? cell.task_id) as string
+      const cid = (cell.columnId ?? cell.column_id) as string
+      if (!cellMap[tid]) cellMap[tid] = {}
+      cellMap[tid][cid] = { id: cell.id as string, task_id: tid, column_id: cid, value: cell.value, updated_at: cell.updatedAt as string }
     }
     set({ groups, tasks, columns, cellValues: cellMap, loading: false })
   },

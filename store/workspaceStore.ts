@@ -27,13 +27,27 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
   fetchWorkspaces: async () => {
     set({ loading: true })
     const res = await fetch('/api/workspaces')
-    const data = res.ok ? await res.json() : []
-    set({ workspaces: data, loading: false })
+    const raw = res.ok ? await res.json() : []
+    // Drizzle returns camelCase; Workspace type uses snake_case — remap
+    const data: Workspace[] = raw.map((w: Record<string, unknown>) => ({
+      id: w.id, name: w.name, slug: w.slug, plan: w.plan,
+      owner_id: w.ownerId ?? w.owner_id,
+      stripe_customer_id: w.stripeCustomerId ?? w.stripe_customer_id ?? null,
+      stripe_subscription_id: w.stripeSubscriptionId ?? w.stripe_subscription_id ?? null,
+      created_at: w.createdAt ?? w.created_at ?? '',
+    }))
+    set({ workspaces: data, activeWorkspace: data[0] ?? null, loading: false })
   },
 
   fetchBoards: async (workspaceId) => {
     const res = await fetch(`/api/workspaces/${workspaceId}/boards`)
-    const data = res.ok ? await res.json() : []
+    const raw = res.ok ? await res.json() : []
+    // Drizzle returns camelCase; Board type uses snake_case — remap
+    const data: Board[] = raw.map((b: Record<string, unknown>) => ({
+      id: b.id, workspace_id: b.workspaceId ?? b.workspace_id,
+      name: b.name, icon: b.icon, color: b.color,
+      description: b.description, created_at: b.createdAt ?? b.created_at,
+    }))
     set({ boards: data })
   },
 
