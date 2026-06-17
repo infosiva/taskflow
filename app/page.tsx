@@ -372,6 +372,185 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Template showcase — "See it in action" */}
+      <section style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '52px 32px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginBottom: 8 }}>EXAMPLE BOARDS</p>
+            <h2 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.025em', color: '#fff', marginBottom: 8 }}>
+              Pick a template. Start in seconds.
+            </h2>
+            <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.35)', maxWidth: 480, margin: '0 auto' }}>
+              Real boards used by real products. Click any to open a live interactive demo — no login.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
+            {[
+              {
+                id: 'T1', name: 'SaaS Sprint Board', category: 'Product / Engineering',
+                accent: '#0ea5e9', bg: 'rgba(14,165,233,0.08)', border: 'rgba(14,165,233,0.20)',
+                tags: ['Kanban', 'AI assign', 'Sprint'],
+                preview: [
+                  { col: 'Todo', color: '#64748b', tasks: ['Design system v2', 'Mobile onboarding'] },
+                  { col: 'In Progress', color: '#0ea5e9', tasks: ['API rate limiting', 'Auth fix'] },
+                  { col: 'Done', color: '#10b981', tasks: ['Release notes'] },
+                ],
+                usedBy: 'taskflow · zerostaff · replydesk',
+              },
+              {
+                id: 'T2', name: 'Dev Tools Backlog', category: 'Engineering / DevOps',
+                accent: '#6366f1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.20)',
+                tags: ['Dark', 'Agent ops', 'CI/CD'],
+                preview: [
+                  { col: 'Backlog', color: '#64748b', tasks: ['Add trace export', 'OTEL bridge'] },
+                  { col: 'Active', color: '#6366f1', tasks: ['Log ingestion v2', 'Alert rules'] },
+                  { col: 'Shipped', color: '#10b981', tasks: ['SDK v1.2'] },
+                ],
+                usedBy: 'agenttrace · neuralos · protoforge',
+              },
+              {
+                id: 'T3', name: 'Education / Quiz Launch', category: 'Product Launch',
+                accent: '#0284c7', bg: 'rgba(2,132,199,0.08)', border: 'rgba(2,132,199,0.20)',
+                tags: ['Light theme', 'Launch', 'Content'],
+                preview: [
+                  { col: 'Ideas', color: '#0284c7', tasks: ['Q&A categories', 'Daily quiz flow'] },
+                  { col: 'Building', color: '#f59e0b', tasks: ['Score system', 'Leaderboard'] },
+                  { col: 'Live', color: '#10b981', tasks: ['MVP quiz engine'] },
+                ],
+                usedBy: 'kwizzo · tutiq · quizbites',
+              },
+              {
+                id: 'T6', name: 'Finance / Fintech Track', category: 'Finance Product',
+                accent: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.20)',
+                tags: ['Dark navy', 'Metrics', 'D3 charts'],
+                preview: [
+                  { col: 'Research', color: '#64748b', tasks: ['Portfolio API', 'Tax rules UK'] },
+                  { col: 'Build', color: '#f59e0b', tasks: ['Dashboard v1', 'Invoice gen'] },
+                  { col: 'Done', color: '#10b981', tasks: ['Bank sync'] },
+                ],
+                usedBy: 'trackwealth · invoicemint · billslash',
+              },
+              {
+                id: 'T11', name: 'AI Agent / Infra Board', category: 'AI Infrastructure',
+                accent: '#22d3ee', bg: 'rgba(34,211,238,0.08)', border: 'rgba(34,211,238,0.20)',
+                tags: ['Terminal', 'Agents', 'Ops'],
+                preview: [
+                  { col: 'Queue', color: '#22d3ee', tasks: ['Agent health check', 'Retry logic'] },
+                  { col: 'Running', color: '#a78bfa', tasks: ['LLM fallback chain', 'Rate limits'] },
+                  { col: 'Done', color: '#10b981', tasks: ['Groq integration'] },
+                ],
+                usedBy: 'neuralos · rideflow · ninjapa',
+              },
+              {
+                id: 'T5', name: 'Travel / Local Product', category: 'Consumer App',
+                accent: '#059669', bg: 'rgba(5,150,105,0.08)', border: 'rgba(5,150,105,0.20)',
+                tags: ['Light green', 'Map UI', 'Itinerary'],
+                preview: [
+                  { col: 'Plan', color: '#059669', tasks: ['Route builder', 'Booking flow'] },
+                  { col: 'Build', color: '#0ea5e9', tasks: ['Map embed', 'SMS confirm'] },
+                  { col: 'Ship', color: '#10b981', tasks: ['v1 live'] },
+                ],
+                usedBy: 'roamplan · bookingcall · anylocal',
+              },
+              {
+                id: 'T9', name: 'Content / Media Calendar', category: 'Marketing',
+                accent: '#f97316', bg: 'rgba(249,115,22,0.08)', border: 'rgba(249,115,22,0.20)',
+                tags: ['Bento', 'Calendar', 'Social'],
+                preview: [
+                  { col: 'Ideas', color: '#f97316', tasks: ['Tamil cinema post', 'Recipe reel'] },
+                  { col: 'Drafting', color: '#eab308', tasks: ['June newsletter', 'Quiz thread'] },
+                  { col: 'Posted', color: '#10b981', tasks: ['May roundup'] },
+                ],
+                usedBy: 'draftcal · nammatamil · ai-social',
+              },
+              {
+                id: 'T16', name: 'Language / EdTech Build', category: 'EdTech Product',
+                accent: '#9333ea', bg: 'rgba(147,51,234,0.08)', border: 'rgba(147,51,234,0.20)',
+                tags: ['Full-width', 'Input-first', 'Freemium'],
+                preview: [
+                  { col: 'Todo', color: '#9333ea', tasks: ['Pronunciation API', 'Lesson flow'] },
+                  { col: 'In Review', color: '#ec4899', tasks: ['Accent detection', 'XP system'] },
+                  { col: 'Done', color: '#10b981', tasks: ['Voice input v1'] },
+                ],
+                usedBy: 'speakiq · resumevault · pdfideas',
+              },
+            ].map((tmpl) => (
+              <Link
+                key={tmpl.id}
+                href="/demo"
+                style={{ textDecoration: 'none', display: 'block' }}
+              >
+                <div
+                  style={{
+                    background: tmpl.bg,
+                    border: `1px solid ${tmpl.border}`,
+                    borderRadius: 12,
+                    padding: '14px 14px 12px',
+                    cursor: 'pointer',
+                    transition: 'transform 180ms cubic-bezier(0.23,1,0.32,1), box-shadow 180ms cubic-bezier(0.23,1,0.32,1), border-color 180ms ease',
+                    height: '100%',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-3px)'
+                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = `0 8px 32px ${tmpl.accent}22`
+                    ;(e.currentTarget as HTMLDivElement).style.borderColor = tmpl.accent + '55'
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'none'
+                    ;(e.currentTarget as HTMLDivElement).style.boxShadow = 'none'
+                    ;(e.currentTarget as HTMLDivElement).style.borderColor = tmpl.border
+                  }}
+                >
+                  {/* Mini kanban preview */}
+                  <div style={{ display: 'flex', gap: 5, marginBottom: 12, height: 72 }}>
+                    {tmpl.preview.map(col => (
+                      <div key={col.col} style={{ flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 7, padding: '5px 6px', overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 3, marginBottom: 4 }}>
+                          <div style={{ width: 5, height: 5, borderRadius: '50%', background: col.color, flexShrink: 0 }} />
+                          <span style={{ fontSize: 8, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.04em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{col.col}</span>
+                        </div>
+                        {col.tasks.map(t => (
+                          <div key={t} style={{ background: 'rgba(255,255,255,0.07)', borderRadius: 3, padding: '3px 4px', marginBottom: 2, fontSize: 8, color: 'rgba(255,255,255,0.55)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t}</div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Card meta */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{tmpl.name}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{tmpl.category}</div>
+                    </div>
+                    <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4, background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)', fontFamily: 'monospace', flexShrink: 0, marginLeft: 6 }}>{tmpl.id}</span>
+                  </div>
+
+                  {/* Tags */}
+                  <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                    {tmpl.tags.map(tag => (
+                      <span key={tag} style={{ fontSize: 9.5, padding: '2px 6px', borderRadius: 4, background: `${tmpl.accent}18`, color: tmpl.accent, fontWeight: 600, border: `1px solid ${tmpl.accent}30` }}>{tag}</span>
+                    ))}
+                  </div>
+
+                  {/* Used by + CTA */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.22)' }}>Used by {tmpl.usedBy}</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: tmpl.accent }}>Open demo →</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 24 }}>
+            <Link href="/demo" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', textDecoration: 'none', fontWeight: 500 }}>
+              All templates open the same live board — drag, edit, add tasks, try AI →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '52px 32px', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
